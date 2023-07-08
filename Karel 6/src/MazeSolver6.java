@@ -1,0 +1,86 @@
+import becker.robots.City;
+import becker.robots.Direction;
+import becker.robots.Robot;
+import java.util.Random;
+
+public class MazeSolver6 extends Robot
+{
+	
+	public MazeSolver6 (City c, int s, int a, Direction d, int n)
+	{	
+		super (c, s, a, d, n);
+		this.getDirection();
+		this.setSpeed(10);
+	}
+	
+	public void maze()
+	{
+		while ((this.countThingsInBackpack() != 0) || (this.getStreet() != 9 || this.getAvenue() != 9))
+		{
+			if (noleftwall() == true)
+			{
+				this.turnLeft();
+				this.move();
+				maze();
+			}
+			else if (noleftwall() == false)
+			{
+				if (nofrontwall() == false)
+				{
+					this.turnRight();
+					maze();
+				}
+				else if (nofrontwall() == true)
+				{
+					this.move();
+					maze();
+				}
+			}
+		}
+	}
+	
+	public void move()
+	{	
+		super.move();
+		int match1 = super.getAvenue();
+		int match2 = super.getStreet();
+		if ((!super.canPickThing() && super.countThingsInBackpack() > 0) && (match1 == match2))
+			super.putThing();
+	}
+	
+	public boolean noleftwall()
+	{	
+		this.turnLeft();
+		if (this.frontIsClear() == true)
+		{
+			this.turnRight();
+			return true;
+		}
+		else
+		{
+			this.turnRight();
+			return false;
+		}
+	}
+	
+	public boolean nofrontwall()
+	{
+		if (this.frontIsClear() == true)
+			return true;
+		else
+			return false;
+	}
+		
+	public void turnRight()
+	{
+		for (int i = 0; i < 3; i++)
+			super.turnLeft();
+	}
+		
+	public void move(int steps)
+	{
+		for (int i = 0; i < steps; i++)
+			this.move();
+	}
+	
+	}
